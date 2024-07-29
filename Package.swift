@@ -8,7 +8,7 @@ let package = Package(
     products: [
         .library(
             name: "SendbirdUIKit",
-            targets: ["SendbirdUIKitTarget"]
+            targets: ["SendbirdUIKitSource"] // Point to the source target
         ),
     ],
     dependencies: [
@@ -19,18 +19,13 @@ let package = Package(
         ),
     ],
     targets: [
-        .binaryTarget(
-            name: "SendbirdUIKit",
-            path: "Framework/SendbirdUIKit.xcframework"
-        ),
         .target(
-            name: "SendbirdUIKitTarget",
+            name: "SendbirdUIKitSource",
             dependencies: [
-                .target(name: "SendbirdUIKit"),
                 .product(name: "SendbirdChatSDK", package: "SendbirdChatSDK")
             ],
-            path: "Framework/Dependency",
-            exclude: ["../../Sample", "../../Sources"]
-        ),
+            path: "Sources", // Ensure this path points to the source files
+            exclude: ["../Exclude"] // Update as necessary to exclude non-source files
+        )
     ]
 )
