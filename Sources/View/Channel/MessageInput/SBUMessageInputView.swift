@@ -138,14 +138,7 @@ public protocol SBUMessageInputViewDataSource: AnyObject {
 }
 
 open class SBUMessageInputView: SBUView, SBUActionSheetDelegate, UITextViewDelegate {
-    // MARK: - Properties (Public)
-    public lazy var addButton: UIButton? = {
-        let button = UIButton(type: .custom)
-        button.addTarget(self, action: #selector(onTapAddButton(_:)), for: .touchUpInside)
-        button.isHidden = false
-        button.alpha = 1
-        return button
-    }()
+    
     
     public lazy var placeholderLabel = UILabel()
     
@@ -620,10 +613,6 @@ open class SBUMessageInputView: SBUView, SBUActionSheetDelegate, UITextViewDeleg
         self.inputViewBottomSpacer
             .sbu_constraint(height: 0)
         
-        // Subviews in InputHStackView
-        self.addButton?
-            .sbu_constraint(width: 32, height: 38)
-        
         // leading/trailing spacing for textview
         self.textViewLeadingPaddingView
             .sbu_constraint(width: self.textViewLeadingSpacing)
@@ -729,15 +718,7 @@ open class SBUMessageInputView: SBUView, SBUActionSheetDelegate, UITextViewDeleg
         self.textView?.tintColor = theme.textFieldTintColor
         self.textView?.layer.borderColor = theme.textFieldBorderColor.cgColor
         self.textView?.typingAttributes = defaultAttributes
-        
-        // addButton
-        let iconAdd = SBUIconSetType.iconAdd
-            .image(with: (self.isFrozen || self.isMuted || self.isDisabledByServer || self.isDisabled)
-                   ? theme.buttonDisabledTintColor
-                   : theme.buttonTintColor,
-                   to: SBUIconSetType.Metric.defaultIconSize)
-        self.addButton?.setImage(iconAdd, for: .normal)
-        
+       
         // IconSend
         self.sendButton?.setImage(
             SBUIconSetType.iconSend.image(
@@ -793,8 +774,6 @@ open class SBUMessageInputView: SBUView, SBUActionSheetDelegate, UITextViewDeleg
         self.basedText = text
         self.placeholderLabel.isHidden = !text.isEmpty
         
-        self.addButton?.isHidden = true
-        self.addButton?.alpha = 0
         
         self.sendButton?.isHidden = !showsSendButton
         self.voiceMessageButton?.isHidden = true
@@ -816,10 +795,7 @@ open class SBUMessageInputView: SBUView, SBUActionSheetDelegate, UITextViewDeleg
         self.textView?.text = ""
         self.basedText = ""
         self.placeholderLabel.isHidden = false
-        
-        self.addButton?.isHidden = false
-        self.addButton?.alpha = 1
-        
+                
         self.textViewTrailingPaddingView.isHidden = (!showsSendButton && !showsVoiceMessageButton)
         self.voiceMessageButton?.isHidden = !showsVoiceMessageButton
         
@@ -840,7 +816,6 @@ open class SBUMessageInputView: SBUView, SBUActionSheetDelegate, UITextViewDeleg
         
         self.textView?.isEditable = !self.isFrozen
         self.textView?.isUserInteractionEnabled = !self.isFrozen
-        self.addButton?.isEnabled = !self.isFrozen
         self.voiceMessageButton?.isEnabled = !self.isFrozen
         
         if self.isFrozen {
@@ -856,7 +831,6 @@ open class SBUMessageInputView: SBUView, SBUActionSheetDelegate, UITextViewDeleg
         
         self.textView?.isEditable = !self.isMuted
         self.textView?.isUserInteractionEnabled = !self.isMuted
-        self.addButton?.isEnabled = !self.isMuted
         self.voiceMessageButton?.isEnabled = !self.isMuted
         
         if self.isMuted {
@@ -875,7 +849,6 @@ open class SBUMessageInputView: SBUView, SBUActionSheetDelegate, UITextViewDeleg
         
         self.textView?.isEditable = !self.isDisabledByServer
         self.textView?.isUserInteractionEnabled = !self.isDisabledByServer
-        self.addButton?.isEnabled = !self.isDisabledByServer
         self.voiceMessageButton?.isEnabled = !self.isDisabledByServer
         
         if self.isDisabledByServer {
@@ -895,7 +868,6 @@ open class SBUMessageInputView: SBUView, SBUActionSheetDelegate, UITextViewDeleg
 
         self.textView?.isEditable = isEnabled
         self.textView?.isUserInteractionEnabled = isEnabled
-        self.addButton?.isEnabled = isEnabled
         self.voiceMessageButton?.isEnabled = isEnabled
 
         if isEnabled == false {
@@ -908,7 +880,6 @@ open class SBUMessageInputView: SBUView, SBUActionSheetDelegate, UITextViewDeleg
     public func setErrorState() {
         self.textView?.isEditable = false
         self.textView?.isUserInteractionEnabled = false
-        self.addButton?.isEnabled = false
         
         self.endTypingMode()
         self.setupStyles()
